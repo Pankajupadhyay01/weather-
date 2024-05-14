@@ -397,7 +397,7 @@ let weather = {
                 descElement.textContent = description;
 
 
-                const specificForecastContent = `${dayOfWeek} ${index + 1}. ${iconElement.outerHTML} ${tempElement.textContent} - ${descElement.textContent}`;
+                const specificForecastContent = ` ${iconElement.outerHTML} ${tempElement.textContent} <br/> - ${descElement.textContent}`;
 
 
                 if (index === 0) {
