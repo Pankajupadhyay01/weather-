@@ -305,10 +305,10 @@
 
 let weather = {
     "apikey": "9d8c80368ca06b3a5df1e6a170b18653",
-    convertMpsToKmh: function(speedMps) {
+    convertMpsToKmh: function (speedMps) {
         return (speedMps * 3.6).toFixed(2); // Convert and round to 2 decimal places
     },
-    fetchWeather: function(city) {
+    fetchWeather: function (city) {
         fetch("https://api.openweathermap.org/data/2.5/weather?q="
             + city
             + "&units=metric&appid="
@@ -320,9 +320,9 @@ let weather = {
         this.fetchForecast(city);
     },
 
-    fetchForecast: function(city) {
+    fetchForecast: function (city) {
 
-        
+
 
         // Fetch forecast data for the next few days
         fetch("https://api.openweathermap.org/data/2.5/forecast?q="
@@ -333,7 +333,7 @@ let weather = {
             .then((data) => this.displayForecast(data));
     },
 
-    displayWeather: function(data) {
+    displayWeather: function (data) {
         const { name } = data;
         const { icon, description } = data.weather[0];
         const { temp, feels_like, temp_min, temp_max, pressure, humidity, sea_level, grnd_level } = data.main;
@@ -362,58 +362,73 @@ let weather = {
         document.body.style.backgroundImage = "url('https://source.unsplash.com/1600x900/?" + name + "')"
     },
 
-    displayForecast: function(data) {
+    displayForecast: function (data) {
         const forecastContainer = document.querySelector(".forecast");
-        forecastContainer.innerHTML = ""; // Clear previous forecast data
+        forecastContainer.innerHTML = "";
+        for (let i = 0; i < data.list.length; i += 8) {
+            const dayForecast = data.list.slice(i, i + 8);
 
-        // Iterate over forecast data for each day
-        data.list.forEach((forecastItem) => {
-            const forecastDate = new Date(forecastItem.dt * 1000); // Convert timestamp to date object
-            const dayOfWeek = forecastDate.toLocaleDateString("en-US", { weekday: "short" });
-            const weatherIcon = forecastItem.weather[0].icon;
-            const temperature = forecastItem.main.temp;
-            const description = forecastItem.weather[0].description;
+            const forecastDayElement = document.createElement("div");
+            forecastDayElement.classList.add("forecast-day");
 
-            // Create HTML elements to display forecast
-            const forecastElement = document.createElement("div");
-            forecastElement.classList.add("forecast-item");
+            let dayOfWeek;
 
-            const dayElement = document.createElement("div");
-            dayElement.classList.add("forecast-day");
-            dayElement.textContent = dayOfWeek;
+            dayForecast.forEach((forecastItem, index) => {
+                const forecastDate = new Date(forecastItem.dt * 1000);
+                dayOfWeek = forecastDate.toLocaleDateString("en-US", { weekday: "short" });
 
-            const iconElement = document.createElement("img");
-            iconElement.classList.add("forecast-icon");
-            iconElement.src = "https://openweathermap.org/img/wn/" + weatherIcon + ".png";
+                const forecastElement = document.createElement("div");
+                forecastElement.classList.add("forecast-item");
 
-            const tempElement = document.createElement("div");
-            tempElement.classList.add("forecast-temp");
-            tempElement.textContent = temperature + "°C";
+                const weatherIcon = forecastItem.weather[0].icon;
+                const temperature = forecastItem.main.temp;
+                const description = forecastItem.weather[0].description;
 
-            const descElement = document.createElement("div");
-            descElement.classList.add("forecast-description");
-            descElement.textContent = description;
+                const iconElement = document.createElement("img");
+                iconElement.classList.add("forecast-icon");
+                iconElement.src = "https://openweathermap.org/img/wn/" + weatherIcon + ".png";
 
-            // Append elements to forecast container
-            forecastElement.appendChild(dayElement);
-            forecastElement.appendChild(iconElement);
-            forecastElement.appendChild(tempElement);
-            forecastElement.appendChild(descElement);
-            forecastContainer.appendChild(forecastElement);
-        });
+                const tempElement = document.createElement("div");
+                tempElement.classList.add("forecast-temp");
+                tempElement.textContent = temperature + "°C";
+
+                const descElement = document.createElement("div");
+                descElement.classList.add("forecast-description");
+                descElement.textContent = description;
+
+
+                const specificForecastContent = `${dayOfWeek} ${index + 1}. ${iconElement.outerHTML} ${tempElement.textContent} - ${descElement.textContent}`;
+
+
+                if (index === 0) {
+                    const dayOfWeekElement = document.createElement("span");
+                    dayOfWeekElement.classList.add("day-of-week");
+                    dayOfWeekElement.textContent = dayOfWeek;
+                    forecastDayElement.appendChild(dayOfWeekElement);
+                }
+
+                forecastElement.innerHTML = specificForecastContent;
+
+                forecastDayElement.appendChild(forecastElement);
+            });
+
+            forecastDayElement.style.marginBottom = "1em";
+
+            forecastContainer.appendChild(forecastDayElement);
+        }
     },
 
-    search: function() {
+    search: function () {
         this.fetchWeather(document.querySelector(".searchbar").value);
     }
 };
 
-document.querySelector(".search button").addEventListener("click", function() {
+document.querySelector(".search button").addEventListener("click", function () {
     weather.search();
 });
 
-document.querySelector(".searchbar").addEventListener("keyup", function(event){
-    if(event.key == "Enter"){
+document.querySelector(".searchbar").addEventListener("keyup", function (event) {
+    if (event.key == "Enter") {
         weather.search();
     }
 });

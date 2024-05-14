@@ -2,7 +2,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     margin: 0;
     background: #222;
     font-family: 'Open Sans', sans-serif;
@@ -18,14 +17,33 @@ body {
     color: whitesmoke;
     padding: 3em;
     border-radius: 30px;
-    max-height: 100vh;
-    height: 100%;
     width: 100%;
     flex-direction: column;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 1em;
+    background: #7c7c7ccd;
+
+}
+
+.forecast {
+    width: 80%;
+    display: grid;
+    margin: auto;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.forecast-item {
+    color: blue;
+    font-weight: 800;
+    border-radius: 20px;
+    margin: 20px 10px;
+    padding: 2px;
+    background-color: rgba(250, 235, 215, 0.453);
 }
 
 .search {
@@ -42,7 +60,6 @@ button {
     height: 45px;
     width: 45px;
     outline: none;
-    background: #7c7c7ccd;
     color: whitesmoke;
     cursor: pointer;
     transition: 0.2s ease-in-out;
@@ -64,7 +81,7 @@ input.searchbar {
 
 .sub_one {
     background-color: aliceblue;
-    font-weight: bolder ;
+    font-weight: bolder;
     border-radius: 0 10px 10px 10px;
     color: black;
     font-size: 25px;
